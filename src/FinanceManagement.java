@@ -1,6 +1,7 @@
 import java.io.File;
+import java.io.Serializable;
 
-public class FinanceManagement {
+public class FinanceManagement implements Serializable {
 
     private double _income;
     private double _expense;
@@ -24,22 +25,35 @@ public class FinanceManagement {
     public FinanceManagement() {
         
         String path_config = "config/";
+        String path_savings = path_config + "savings.ser";
+        String path_income = path_config + "income.ser";
+        String path_expense = path_config + "expense.ser";
+        String path_recurring = path_config + "recurring.ser";
+
+
 
         _config_dir = new File(path_config);
 
-        if( ! _config_dir.exists() ){
-            try{
+        boolean flag = false;
+        try{
+            if( ! _config_dir.exists() ){
                 _config_dir.mkdirs();
+                flag = true;
             }
-            catch( Exception e  ){
-                System.out.println(e);
+        }
+        catch( Exception e  ){
+            System.out.println(e);
+        }
+        finally{
+            if( flag  ){
+                _savings_tracker = new SavingsTracker( this,  path_savings );
             }
+
         }
 
 
 
-        String path_savings = path_config + "savings";
-        _savings_tracker = new SavingsTracker( this,  path_savings );
+
 
 
 

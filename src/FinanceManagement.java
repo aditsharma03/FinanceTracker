@@ -1,4 +1,6 @@
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.ObjectInputStream;
 import java.io.Serializable;
 
 public class FinanceManagement implements Serializable {
@@ -15,7 +17,7 @@ public class FinanceManagement implements Serializable {
 
     
 
-    //private IncomeTracker _income_tracker;
+    private IncomeTracker _income_tracker;
     //private ExpenseTracker _expense_tracker;
     private SavingsTracker _savings_tracker;
     //private RecurringExpenseTracker _recurring_expense_tracker;
@@ -40,6 +42,18 @@ public class FinanceManagement implements Serializable {
                 _config_dir.mkdirs();
                 flag = true;
             }
+            else{
+                FileInputStream fileIn;
+                ObjectInputStream in;
+
+                fileIn = new FileInputStream(path_savings);
+                in = new ObjectInputStream(fileIn);
+                _savings_tracker = (SavingsTracker) in.readObject();
+
+                fileIn = new FileInputStream(path_income);
+                in = new ObjectInputStream(fileIn);
+                _income_tracker = (IncomeTracker) in.readObject();
+            }
         }
         catch( Exception e  ){
             System.out.println(e);
@@ -47,15 +61,10 @@ public class FinanceManagement implements Serializable {
         finally{
             if( flag  ){
                 _savings_tracker = new SavingsTracker( this,  path_savings );
+                _income_tracker = new IncomeTracker( this,  path_income );
             }
 
         }
-
-
-
-
-
-
 
 
 

@@ -5,17 +5,17 @@ import java.io.ObjectOutputStream;
 
 public class SavingsTracker implements Serializable {
 
-    private double goal;
-    private double savings;
+    private double _goal;
+    private double _savings;
 
 
     public SavingsTracker( FinanceManagement obj, String config ) {
 
 
-        this.savings = obj.getIncome() - obj.getExpense();
-        obj.setBalance(savings);
+        this._savings = obj.getIncome() - obj.getExpense();
+        obj.setBalance(_savings);
 
-        System.out.println(savings);
+        System.out.println(_savings);
 
 
 

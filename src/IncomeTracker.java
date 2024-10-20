@@ -7,19 +7,18 @@ import java.io.Serializable;
 public class IncomeTracker implements Serializable {
     
     private double _total_income;
+    private List<IncomeEntity> _income_sources;
 
-    private List<TransactionEntity> _income_sources;
 
     public IncomeTracker( FinanceManagement obj, String config ) {
 
-
         _income_sources = new ArrayList<>();
-
 
         try{
             FileOutputStream config_income = new FileOutputStream( config );
             ObjectOutputStream out = new ObjectOutputStream(config_income );
             out.writeObject(this);
+            out.close();
         }
         catch( Exception e ){
             System.out.println( e );
@@ -27,14 +26,14 @@ public class IncomeTracker implements Serializable {
 
     }
 
-    public void addIncomeSource( IncomeSource source ){
+    public void addIncomeSource( IncomeEntity source ){
         this._income_sources.add( source  );
     }
 
     public double calculateIncome(){
         _total_income = 0;
-        for( IncomeSource src: _income_sources ){
-            _total_income += src.getAmount();
+        for( IncomeEntity entity: _income_sources ){
+            _total_income += entity.getRelativeAmount();
         }
 
         return _total_income;

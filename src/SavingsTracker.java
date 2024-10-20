@@ -12,7 +12,7 @@ public class SavingsTracker implements Serializable {
 
 
         double savings = obj.getIncome() - obj.getExpense();
-        setGoal(savings);
+        setSavings(savings);
         obj.setBalance(savings);
 
         System.out.println(_savings);
@@ -23,6 +23,7 @@ public class SavingsTracker implements Serializable {
             FileOutputStream config_savings = new FileOutputStream( config );
             ObjectOutputStream out = new ObjectOutputStream(config_savings);
             out.writeObject(this);
+            out.close();
         }
         catch( Exception e ){
             System.out.println( e );
@@ -36,6 +37,13 @@ public class SavingsTracker implements Serializable {
     }
     public double getGoal(){
         return this._goal;
+    }
+    
+    public void setSavings( double savings ){
+        this._savings = savings;
+    }
+    public double getSavings(){
+        return this._savings;
     }
 
 

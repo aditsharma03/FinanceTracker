@@ -82,6 +82,14 @@ public class FinanceManagement implements Serializable {
     }
 
 
+    public void refresh(){
+        setIncome( _income_tracker.calculateIncome() );
+        setExpense( _expense_tracker.calculateExpense() );
+    }
+
+
+
+
     public void setIncome( double income ){
         this._income = income;
     }

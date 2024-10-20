@@ -1,7 +1,6 @@
 import java.io.Serializable;
 import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
-//import FinanceManagement;
 
 public class SavingsTracker implements Serializable {
 
@@ -12,8 +11,9 @@ public class SavingsTracker implements Serializable {
     public SavingsTracker( FinanceManagement obj, String config ) {
 
 
-        this._savings = obj.getIncome() - obj.getExpense();
-        obj.setBalance(_savings);
+        double savings = obj.getIncome() - obj.getExpense();
+        setGoal(savings);
+        obj.setBalance(savings);
 
         System.out.println(_savings);
 
@@ -28,9 +28,14 @@ public class SavingsTracker implements Serializable {
             System.out.println( e );
         }
         
+    }
 
 
-        
+    public void setGoal( double goal ){
+        this.goal = goal;
+    }
+    public double getGoal(){
+        return this.goal;
     }
 
 

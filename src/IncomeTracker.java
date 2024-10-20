@@ -8,7 +8,7 @@ public class IncomeTracker implements Serializable {
     
     private double _total_income;
 
-    private List<IncomeSource> _income_sources;
+    private List<TransactionEntity> _income_sources;
 
     public IncomeTracker( FinanceManagement obj, String config ) {
 

@@ -10,15 +10,15 @@ public class FinanceManagement implements Serializable {
     private double _balance;
 
     private File _config_dir;
-    private File _config_income;
-    private File _config_expense;
-    private File _config_savings;
-    private File _config_recurring;
+    //private File _config_income;
+    //private File _config_expense;
+    //private File _config_savings;
+    //private File _config_recurring;
 
     
 
     private IncomeTracker _income_tracker;
-    //private ExpenseTracker _expense_tracker;
+    private ExpenseTracker _expense_tracker;
     private SavingsTracker _savings_tracker;
     //private RecurringExpenseTracker _recurring_expense_tracker;
 
@@ -46,13 +46,22 @@ public class FinanceManagement implements Serializable {
                 FileInputStream fileIn;
                 ObjectInputStream in;
 
+                fileIn = new FileInputStream(path_income);
+                in = new ObjectInputStream(fileIn);
+                _income_tracker = (IncomeTracker) in.readObject();
+
+                fileIn = new FileInputStream(path_expense);
+                in = new ObjectInputStream(fileIn);
+                _expense_tracker = (ExpenseTracker) in.readObject();
+
                 fileIn = new FileInputStream(path_savings);
                 in = new ObjectInputStream(fileIn);
                 _savings_tracker = (SavingsTracker) in.readObject();
 
-                fileIn = new FileInputStream(path_income);
-                in = new ObjectInputStream(fileIn);
-                _income_tracker = (IncomeTracker) in.readObject();
+
+
+                in.close();
+                fileIn.close();
             }
         }
         catch( Exception e  ){
@@ -60,8 +69,9 @@ public class FinanceManagement implements Serializable {
         }
         finally{
             if( flag  ){
-                _savings_tracker = new SavingsTracker( this,  path_savings );
                 _income_tracker = new IncomeTracker( this,  path_income );
+                _expense_tracker = new ExpenseTracker( this, path_expense );
+                _savings_tracker = new SavingsTracker( this,  path_savings );
             }
 
         }

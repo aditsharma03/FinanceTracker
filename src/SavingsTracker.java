@@ -32,10 +32,10 @@ public class SavingsTracker implements Serializable {
 
 
     public void setGoal( double goal ){
-        this.goal = goal;
+        this._goal = goal;
     }
     public double getGoal(){
-        return this.goal;
+        return this._goal;
     }
 
 

@@ -1,14 +1,22 @@
 import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.DefaultListModel;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.UIManager;
@@ -39,7 +47,6 @@ public class GraphicalInterface extends FinanceManagement {
         JPanel tab2 = new JPanel();
         JPanel tab3 = new JPanel();
         JPanel tab4 = new JPanel();
-        tab4.add( new JLabel("Savings") );
 
 
         tab1.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
@@ -52,7 +59,7 @@ public class GraphicalInterface extends FinanceManagement {
         configExpense(tab3);
 
         tab4.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
-        //configSavings(tab4);
+        configSavings(tab4);
 
         
         tabbedpane.addTab("Overview", tab1 );
@@ -144,6 +151,68 @@ public class GraphicalInterface extends FinanceManagement {
         for( ExpenseEntity expense: expenseEntities ){
             expenseListModel.addElement(expense.getName() + "\t:" + expense.getCurrency()+" "+expense.getAmount() + "\t:" + expense.getDescription() );
         }
+
+    }
+
+
+    public void configSavings(JPanel tab){
+
+        JLabel headingLabel = new JLabel("Total Savings");
+        headingLabel.setFont(new Font("Arial", Font.BOLD, 36));
+        headingLabel.setBorder(BorderFactory.createEmptyBorder(10, 0, 20, 0));
+
+        JLabel savingsLabel = new JLabel("Savings: " + _savings_tracker.getSavings());
+        JLabel goalsLabel = new JLabel("Goal: " + _savings_tracker.getGoal());
+
+
+        JProgressBar progressbar = new JProgressBar(0, 100);
+        progressbar.setBorder(BorderFactory.createEmptyBorder(20, 0, 20, 0));
+
+        int progress = 0;
+        if( _savings_tracker.getGoal() != 0.0 ){
+            progress = (int) Math.round(_savings_tracker.getSavings() / _savings_tracker.getGoal() * 100);
+            if( progress > 100  ) progress = 100;
+        }
+
+        progressbar.setValue(progress);
+        progressbar.setStringPainted(true);
+        progressbar.setPreferredSize(new Dimension(400, 40));
+
+
+
+        JButton updatebutton = new JButton("Update Goal");
+        updatebutton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e){
+
+                String input = JOptionPane.showInputDialog("Enter new goal");
+                try {
+                    if( input != null && !input.trim().isEmpty() ){
+                        double newgoal = Double.parseDouble(input);
+                        _savings_tracker.setGoal(newgoal);
+                    }
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(null, "Please enter a valid number");
+                }
+
+                configSavings(tab);
+            }
+        });
+
+
+
+
+
+        tab.removeAll();
+        tab.setLayout(new BoxLayout(tab, BoxLayout.Y_AXIS));
+
+        tab.add(headingLabel);
+        tab.add(savingsLabel);
+        tab.add(goalsLabel);
+
+        tab.add(progressbar);
+
+        tab.add(updatebutton);
+
 
     }
 

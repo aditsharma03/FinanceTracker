@@ -21,6 +21,9 @@ import javax.swing.UIManager;
 
 public class GraphicalInterface extends FinanceManagement {
 
+
+        JButton refresh = new JButton("Refresh");
+
     public GraphicalInterface() {
         super();
 
@@ -60,7 +63,6 @@ public class GraphicalInterface extends FinanceManagement {
         configSavings(tab4);
 
 
-        JButton refresh = new JButton("Refresh");
         refresh.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e){
                 configOverview(tab1);
@@ -75,12 +77,14 @@ public class GraphicalInterface extends FinanceManagement {
         tabbedpane.addTab("Income", tab2 );
         tabbedpane.addTab("Expense", tab3 );
         tabbedpane.addTab("Savings", tab4 );
-        tabbedpane.add(refresh);
+        //tabbedpane.add(refresh);
+        
+        tabbedpane.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
         JPanel container = new JPanel();
         container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
         container.add(tabbedpane);
-        container.add(refresh);
+        //container.add(refresh);
 
         frame.add( container, BorderLayout.CENTER );
 
@@ -158,6 +162,7 @@ public class GraphicalInterface extends FinanceManagement {
                         );
 
                         refresh();
+                        refresh.doClick();
 
                         configIncome(tab);
                     } catch (Exception ex) {
@@ -180,7 +185,7 @@ public class GraphicalInterface extends FinanceManagement {
         incomeListModel.clear();
         List<IncomeEntity> incomeEntities = _income_tracker.get_income_sources();
         for( IncomeEntity income: incomeEntities ){
-            incomeListModel.addElement(income.getName() + "\t:" + income.getCurrency()+" "+income.getAmount() + "\t:" + income.getDescription() );
+            incomeListModel.addElement(income.getName() + "----------------" + income.getCurrency()+" "+income.getAmount() + "----------------" + income.getDescription() );
         }
 
     }
@@ -234,6 +239,7 @@ public class GraphicalInterface extends FinanceManagement {
                         );
 
                         refresh();
+                        refresh.doClick();
 
                         configExpense(tab);
                     } catch (Exception ex) {
@@ -255,7 +261,7 @@ public class GraphicalInterface extends FinanceManagement {
         expenseListModel.clear();
         List<ExpenseEntity> expenseEntities = _expense_tracker.get_expense_sources();
         for( ExpenseEntity expense: expenseEntities ){
-            expenseListModel.addElement(expense.getName() + "\t:" + expense.getCurrency()+" "+expense.getAmount() + "\t:" + expense.getDescription() );
+            expenseListModel.addElement(expense.getName() + "----------------" + expense.getCurrency()+" "+expense.getAmount() + "----------------" + expense.getDescription() );
         }
 
     }
@@ -303,6 +309,7 @@ public class GraphicalInterface extends FinanceManagement {
                 }
 
                 refresh();
+                refresh.doClick();
 
                 configSavings(tab);
             }

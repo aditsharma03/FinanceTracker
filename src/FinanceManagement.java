@@ -1,6 +1,8 @@
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
 public class FinanceManagement implements Serializable {
@@ -22,15 +24,17 @@ public class FinanceManagement implements Serializable {
     protected SavingsTracker _savings_tracker;
     //private RecurringExpenseTracker _recurring_expense_tracker;
 
+
+    private String path_config = "config/";
+    private String path_savings = path_config + "savings.ser";
+    private String path_income = path_config + "income.ser";
+    private String path_expense = path_config + "expense.ser";
+    //private String path_recurring = path_config + "recurring.ser";
+
     
 
     public FinanceManagement() {
         
-        String path_config = "config/";
-        String path_savings = path_config + "savings.ser";
-        String path_income = path_config + "income.ser";
-        String path_expense = path_config + "expense.ser";
-        String path_recurring = path_config + "recurring.ser";
 
 
 
@@ -86,6 +90,31 @@ public class FinanceManagement implements Serializable {
         setIncome( _income_tracker.get_total_income() );
         setExpense( _expense_tracker.calculateExpense() );
         setBalance(getIncome() - getExpense());
+
+        save();
+    }
+    public void save(){
+
+        try{
+            FileOutputStream config_income = new FileOutputStream( path_income  );
+            ObjectOutputStream iout = new ObjectOutputStream(config_income );
+            iout.writeObject(_income_tracker);
+            iout.close();
+
+            FileOutputStream config_expense = new FileOutputStream( path_expense  );
+            ObjectOutputStream eout = new ObjectOutputStream(config_expense );
+            eout.writeObject(_expense_tracker);
+            eout.close();
+
+            FileOutputStream config_savings = new FileOutputStream( path_savings  );
+            ObjectOutputStream sout = new ObjectOutputStream(config_savings );
+            sout.writeObject(_savings_tracker);
+            sout.close();
+        }
+        catch( Exception e ){
+            System.out.println( e );
+        }
+
     }
 
 

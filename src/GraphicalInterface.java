@@ -1,12 +1,9 @@
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.Font;
-import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
-
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.DefaultListModel;
@@ -19,6 +16,7 @@ import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
+import javax.swing.JTextField;
 import javax.swing.UIManager;
 
 public class GraphicalInterface extends FinanceManagement {
@@ -61,13 +59,30 @@ public class GraphicalInterface extends FinanceManagement {
         tab4.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
         configSavings(tab4);
 
+
+        JButton refresh = new JButton("Refresh");
+        refresh.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e){
+                configOverview(tab1);
+                configIncome(tab2);
+                configExpense(tab3);
+                configSavings(tab4);
+            }
+        });
+
         
         tabbedpane.addTab("Overview", tab1 );
         tabbedpane.addTab("Income", tab2 );
         tabbedpane.addTab("Expense", tab3 );
         tabbedpane.addTab("Savings", tab4 );
+        tabbedpane.add(refresh);
 
-        frame.add( tabbedpane, BorderLayout.CENTER );
+        JPanel container = new JPanel();
+        container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
+        container.add(tabbedpane);
+        container.add(refresh);
+
+        frame.add( container, BorderLayout.CENTER );
 
     }
 
@@ -76,19 +91,21 @@ public class GraphicalInterface extends FinanceManagement {
         refresh();
         JLabel totalIncomeLabel = new JLabel("Total Income: " + getIncome() );
         JLabel totalExpenseLabel = new JLabel("Total Expenses: " + getExpense() );
-        double savings = getIncome() - getExpense();
+        double savings = getIncome() + getExpense();
         JLabel totalSavingsLabel = new JLabel("Total Savings: " + savings );
 
         // Add content to the panel
         
-        tab.setLayout(new BoxLayout(tab, BoxLayout.Y_AXIS));
 
 
         JLabel heading = new JLabel("Overview");
         heading.setFont(new Font("Arial", Font.BOLD, 36));
         heading.setBorder(BorderFactory.createEmptyBorder(20, 0, 30, 0));
-        tab.add( heading );
 
+
+        tab.removeAll();
+        tab.setLayout(new BoxLayout(tab, BoxLayout.Y_AXIS));
+        tab.add( heading );
         tab.add(totalIncomeLabel);
         tab.add(totalExpenseLabel);
         tab.add(totalSavingsLabel);
@@ -99,19 +116,64 @@ public class GraphicalInterface extends FinanceManagement {
         refresh();
 
         DefaultListModel<String> incomeListModel = new DefaultListModel<>();
+        refreshIncomeList(incomeListModel);
         JList<String> incomeList = new JList<>(incomeListModel);
         JScrollPane scrollPane = new JScrollPane(incomeList);
-        refreshIncomeList(incomeListModel);
+        scrollPane.setBorder(BorderFactory.createEmptyBorder(10, 0, 30, 0));
 
 
         JLabel heading = new JLabel("Overall Income");
         heading.setFont(new Font("Arial", Font.BOLD, 36));
         heading.setBorder(BorderFactory.createEmptyBorder(20, 0, 30, 20));
 
-        tab.setLayout(new BoxLayout(tab, BoxLayout.Y_AXIS));
 
+        JButton addincomebutton = new JButton("Add Income");
+        addincomebutton.addActionListener(new ActionListener() {
+            public void actionPerformed( ActionEvent e ){
+                JPanel addincomepanel = new JPanel();
+                addincomepanel.setLayout(new BoxLayout(addincomepanel, BoxLayout.Y_AXIS));
+
+                addincomepanel.add( new JLabel("Name: ") );
+                JTextField incomename = new JTextField(20);
+                addincomepanel.add(incomename);
+
+                addincomepanel.add( new JLabel("Amount: ") );
+                JTextField incomeamount = new JTextField(20);
+                addincomepanel.add(incomeamount);
+
+                addincomepanel.add( new JLabel("Description: ") );
+                JTextField incomedescription = new JTextField(50);
+                addincomepanel.add(incomedescription);
+
+
+                int result = JOptionPane.showConfirmDialog(null, addincomepanel, "Add Income", JOptionPane.OK_CANCEL_OPTION);
+                if( result == JOptionPane.OK_OPTION ){
+                    try {
+                        String name = incomename.getText();
+                        double amount = Double.parseDouble(incomeamount.getText());
+                        String description = incomedescription.getText();
+
+                        _income_tracker.addIncomeSource(
+                                new IncomeEntity( Currency.INR, amount, name, description )
+                        );
+
+                        refresh();
+
+                        configIncome(tab);
+                    } catch (Exception ex) {
+                        // TODO: handle exception
+                        JOptionPane.showMessageDialog(null, "Please Enter Correct data");
+                    }      
+                }
+            }
+        });
+
+
+        tab.removeAll();
+        tab.setLayout(new BoxLayout(tab, BoxLayout.Y_AXIS));
         tab.add( heading );
         tab.add(scrollPane);
+        tab.add(addincomebutton);
 
     }
     private void refreshIncomeList(DefaultListModel<String> incomeListModel){
@@ -130,19 +192,63 @@ public class GraphicalInterface extends FinanceManagement {
         refresh();
 
         DefaultListModel<String> expenseListModel = new DefaultListModel<>();
+        refreshExpenseList(expenseListModel);
         JList<String> expenseList = new JList<>(expenseListModel);
         JScrollPane scrollPane = new JScrollPane(expenseList);
-        refreshExpenseList(expenseListModel);
+        scrollPane.setBorder(BorderFactory.createEmptyBorder(10, 0, 30, 0));
 
 
         JLabel heading = new JLabel("Overall Expense");
         heading.setFont(new Font("Arial", Font.BOLD, 36));
         heading.setBorder(BorderFactory.createEmptyBorder(20, 0, 30, 20));
 
-        tab.setLayout(new BoxLayout(tab, BoxLayout.Y_AXIS));
 
+        JButton addexpensebutton = new JButton("Add Expense");
+        addexpensebutton.addActionListener(new ActionListener() {
+            public void actionPerformed( ActionEvent e ){
+                JPanel addexpensepanel = new JPanel();
+                addexpensepanel.setLayout(new BoxLayout(addexpensepanel, BoxLayout.Y_AXIS));
+
+                addexpensepanel.add( new JLabel("Name: ") );
+                JTextField expensename = new JTextField(20);
+                addexpensepanel.add(expensename);
+
+                addexpensepanel.add( new JLabel("Amount: ") );
+                JTextField expenseamount = new JTextField(20);
+                addexpensepanel.add(expenseamount);
+
+                addexpensepanel.add( new JLabel("Description: ") );
+                JTextField expensedescription = new JTextField(50);
+                addexpensepanel.add(expensedescription);
+
+
+                int result = JOptionPane.showConfirmDialog(null, addexpensepanel, "Add Expense", JOptionPane.OK_CANCEL_OPTION);
+                if( result == JOptionPane.OK_OPTION ){
+                    try {
+                        String name = expensename.getText();
+                        double amount = Double.parseDouble(expenseamount.getText());
+                        String description = expensedescription.getText();
+
+                        _expense_tracker.addExpenseSource(
+                                new ExpenseEntity( Currency.INR, amount, name, description )
+                        );
+
+                        refresh();
+
+                        configExpense(tab);
+                    } catch (Exception ex) {
+                        // TODO: handle exception
+                        JOptionPane.showMessageDialog(null, "Please Enter Correct data");
+                    }      
+                }
+            }
+        });
+
+        tab.removeAll();
+        tab.setLayout(new BoxLayout(tab, BoxLayout.Y_AXIS));
         tab.add( heading );
         tab.add(scrollPane);
+        tab.add(addexpensebutton);
 
     }
     private void refreshExpenseList(DefaultListModel<String> expenseListModel){
@@ -160,6 +266,8 @@ public class GraphicalInterface extends FinanceManagement {
         JLabel headingLabel = new JLabel("Total Savings");
         headingLabel.setFont(new Font("Arial", Font.BOLD, 36));
         headingLabel.setBorder(BorderFactory.createEmptyBorder(10, 0, 20, 0));
+
+        _savings_tracker.setSavings(getIncome() + getExpense());
 
         JLabel savingsLabel = new JLabel("Savings: " + _savings_tracker.getSavings());
         JLabel goalsLabel = new JLabel("Goal: " + _savings_tracker.getGoal());
@@ -193,6 +301,8 @@ public class GraphicalInterface extends FinanceManagement {
                 } catch (Exception ex) {
                     JOptionPane.showMessageDialog(null, "Please enter a valid number");
                 }
+
+                refresh();
 
                 configSavings(tab);
             }

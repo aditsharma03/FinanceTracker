@@ -28,17 +28,19 @@ public class IncomeTracker implements Serializable {
 
     public void addIncomeSource( IncomeEntity source ){
         this._income_sources.add( source  );
+        calculateIncome();
     }
 
-    public double calculateIncome(){
+    public void calculateIncome(){
         _total_income = 0;
         for( IncomeEntity entity: _income_sources ){
             _total_income += entity.getRelativeAmount();
         }
-
-        return _total_income;
     }
 
+    public double get_total_income() {
+        return _total_income;
+    }
     public List<IncomeEntity> get_income_sources() {
         return _income_sources;
     }

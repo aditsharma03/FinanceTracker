@@ -38,4 +38,8 @@ public class ExpenseTracker implements Serializable {
 
         return _total_expense;
     }
+
+    public List<ExpenseEntity> get_expense_sources() {
+        return _expense_sources;
+    }
 }

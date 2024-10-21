@@ -17,9 +17,9 @@ public class FinanceManagement implements Serializable {
 
     
 
-    private IncomeTracker _income_tracker;
-    private ExpenseTracker _expense_tracker;
-    private SavingsTracker _savings_tracker;
+    protected IncomeTracker _income_tracker;
+    protected ExpenseTracker _expense_tracker;
+    protected SavingsTracker _savings_tracker;
     //private RecurringExpenseTracker _recurring_expense_tracker;
 
     

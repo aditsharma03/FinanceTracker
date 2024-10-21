@@ -38,4 +38,8 @@ public class IncomeTracker implements Serializable {
 
         return _total_income;
     }
+
+    public List<IncomeEntity> get_income_sources() {
+        return _income_sources;
+    }
 }
